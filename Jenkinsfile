@@ -55,42 +55,42 @@ pipeline {
             }
         }
 
-        // stage('Monitor and Fetch Logs for ml-service2') {
-        //     steps {
-        //         script {
-        //             // Monitor until the ml-service2 pod is ready
-        //             def mlService2PodName = ""
-        //             def mlService2PodReady = false
-        //             while (!mlService2PodReady) {
-        //                 echo "Checking ml-service2 pod..."
-        //                 mlService2PodName = sh(script: "kubectl get pods -l app=ml-service2 -o=jsonpath='{.items[0].metadata.name}'", returnStdout: true).trim()
-        //                 if (mlService2PodName) {
-        //                     echo "ml-service2 pod found: ${mlService2PodName}"
-        //                     mlService2PodReady = true
-        //                 } else {
-        //                     echo "Waiting for ml-service2 pod to be created..."
-        //                     sleep 20  // Wait for 20 seconds before retrying
-        //                 }
-        //             }
+        stage('Monitor and Fetch Logs for ml-service2') {
+            steps {
+                script {
+                    // Monitor until the ml-service2 pod is ready
+                    def mlService2PodName = ""
+                    def mlService2PodReady = false
+                    while (!mlService2PodReady) {
+                        echo "Checking ml-service2 pod..."
+                        mlService2PodName = sh(script: "kubectl get pods -l app=ml-service2 -o=jsonpath='{.items[0].metadata.name}'", returnStdout: true).trim()
+                        if (mlService2PodName) {
+                            echo "ml-service2 pod found: ${mlService2PodName}"
+                            mlService2PodReady = true
+                        } else {
+                            echo "Waiting for ml-service2 pod to be created..."
+                            sleep 20  // Wait for 20 seconds before retrying
+                        }
+                    }
 
-        //             // Once the ml-service2 pod is created, fetch logs using nohup
-        //             sh """
-        //             nohup kubectl logs -f ${mlService2PodName} > ml-service2-logs.txt &
-        //             """
-        //         }
-        //     }
-        // }
+                    // Once the ml-service2 pod is created, fetch logs using nohup
+                    sh """
+                    nohup kubectl logs -f ${mlService2PodName} > /var/lib/jenkins/workspace/SPE_Finalml-service2-logs.txt &
+                    """
+                }
+            }
+        }
 
         stage('Monitor Pod Status') {
             steps {
                 script {
-                    def attempts = 10  // Number of attempts (20 minutes / 2 minutes per check)
+                    def attempts = 15  
                     for (int i = 1; i <= attempts; i++) {
                         sh '''
                         echo "Checking pod status... (Attempt ${i})"
                         kubectl get pods -o wide
                         '''
-                        sleep 60 // Wait for 2 minutes
+                        sleep 60 // Wait for 1 minute
                     }
                 }
             }
