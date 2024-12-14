@@ -49,7 +49,7 @@ pipeline {
 
                     // Once the ml-service pod is created, fetch logs using nohup
                     sh """
-                    nohup kubectl logs -f ${mlServicePodName} > ml-service-logs.txt &
+                    nohup kubectl logs -f ${mlServicePodName} > /var/lib/jenkins/workspace/SPE_Final/ml-service-logs.txt &
                     """
                 }
             }
