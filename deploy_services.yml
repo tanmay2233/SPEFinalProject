@@ -1,22 +1,26 @@
 ---
-- name: Deploy services on Minikube
+- name: Deploy ML Services
   hosts: localhost
   tasks:
-    - name: Ensure Minikube is running
-      command: minikube start
+    - name: Start Minikube with custom IP
+      shell: |
+        minikube stop || true
+        minikube start --extra-config=kubelet.node-ip=192.168.49.2 --apiserver-ips=192.168.49.2
 
-    - name: Set up kubectl to use Minikube
+    - name: Configure kubectl context for Minikube
       shell: |
         kubectl config use-context minikube
+        kubectl cluster-info
 
-    - name: Deploy service 1
+    - name: Deploy ml-service
       shell: |
         kubectl apply -f main1/ml-service.yaml
+        kubectl expose deployment ml-service --type=NodePort --name=ml-service-exposed
 
-    - name: Deploy service 2
+    - name: Deploy ml-service2
       shell: |
         kubectl apply -f main2/ml-service2.yaml
+        kubectl expose deployment ml-service2 --type=NodePort --name=ml-service2-exposed
 
-    - name: Verify services are running
-      shell: |
-        kubectl get pods -o wide
+    - name: Wait for Pods to be Ready
+      shell: kubectl wait --for=condition=ready pod --all

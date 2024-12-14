@@ -19,33 +19,30 @@ pipeline {
             }
         }
 
-        stage('Verify Deployment') {
+        stage('Monitor Pod Status') {
             steps {
-                sh '''
-                kubectl get pods -o wide
-                '''
+                script {
+                    def attempts = 10  // Number of attempts (20 minutes / 2 minutes per check)
+                    for (int i = 1; i <= attempts; i++) {
+                        sh '''
+                        echo "Checking pod status... (Attempt ${i})"
+                        kubectl get pods -o wide
+                        '''
+                        sleep 120 // Wait for 2 minutes
+                    }
+                }
             }
         }
 
-        stage('Print Service Details') {
+        stage('Verify Deployment') {
             steps {
-                script {
-                    def services = sh(
-                        script: 'kubectl get services -o jsonpath="{range .items[*]}{.metadata.name} {.spec.clusterIP} {.spec.ports[*].port}\\n{end}"',
-                        returnStdout: true
-                    ).trim()
-
-                    echo "Service details (Name, ClusterIP, Port):"
-                    echo services
-
-                    def urls = sh(
-                        script: 'minikube service list',
-                        returnStdout: true
-                    ).trim()
-
-                    echo "Access your services at these URLs (NodePort or LoadBalancer):"
-                    echo urls
-                }
+                sh '''
+                echo "Final verification..."
+                kubectl get pods -o wide
+                kubectl get services
+                echo "ml-service should be available at http://192.168.49.2:<PORT>"
+                echo "ml-service2 should be available at http://192.168.49.2:<PORT>"
+                '''
             }
         }
     }
