@@ -9,10 +9,6 @@
       shell: |
         kubectl config use-context minikube
 
-    - name: Print Minikube IP
-      shell: |
-        echo "Minikube is running at IP: $(minikube ip)"
-
     - name: Deploy service 1
       shell: |
         kubectl apply -f main1/ml-service.yaml
@@ -20,20 +16,6 @@
     - name: Deploy service 2
       shell: |
         kubectl apply -f main2/ml-service2.yaml
-
-    - name: Wait for services to start
-      shell: |
-        sleep 10  # Adjust this if services need more time to start
-
-    - name: Print services with IP and Ports
-      shell: |
-        echo "Services are available at the following endpoints:"
-        kubectl get services -o wide
-        for svc in $(kubectl get services --no-headers -o custom-columns=":metadata.name"); do
-          NODE_PORT=$(kubectl get svc $svc -o=jsonpath='{.spec.ports[0].nodePort}')
-          MINIKUBE_IP=$(minikube ip)
-          echo "Service $svc is available at http://$MINIKUBE_IP:$NODE_PORT"
-        done
 
     - name: Verify services are running
       shell: |

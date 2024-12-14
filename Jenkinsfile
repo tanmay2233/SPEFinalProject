@@ -27,6 +27,28 @@ pipeline {
                 '''
             }
         }
+
+        stage('Print Service Details') {
+            steps {
+                script {
+                    def services = sh(
+                        script: 'kubectl get services -o jsonpath="{range .items[*]}{.metadata.name} {.spec.clusterIP} {.spec.ports[*].port}\\n{end}"',
+                        returnStdout: true
+                    ).trim()
+
+                    echo "Service details (Name, ClusterIP, Port):"
+                    echo services
+
+                    def urls = sh(
+                        script: 'minikube service list',
+                        returnStdout: true
+                    ).trim()
+
+                    echo "Access your services at these URLs (NodePort or LoadBalancer):"
+                    echo urls
+                }
+            }
+        }
     }
 
     post {
