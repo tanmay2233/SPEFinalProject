@@ -81,20 +81,20 @@ pipeline {
         //     }
         // }
 
-        // stage('Monitor Pod Status') {
-        //     steps {
-        //         script {
-        //             def attempts = 10  // Number of attempts (20 minutes / 2 minutes per check)
-        //             for (int i = 1; i <= attempts; i++) {
-        //                 sh '''
-        //                 echo "Checking pod status... (Attempt ${i})"
-        //                 kubectl get pods -o wide
-        //                 '''
-        //                 sleep 120 // Wait for 2 minutes
-        //             }
-        //         }
-        //     }
-        // }
+        stage('Monitor Pod Status') {
+            steps {
+                script {
+                    def attempts = 10  // Number of attempts (20 minutes / 2 minutes per check)
+                    for (int i = 1; i <= attempts; i++) {
+                        sh '''
+                        echo "Checking pod status... (Attempt ${i})"
+                        kubectl get pods -o wide
+                        '''
+                        sleep 60 // Wait for 2 minutes
+                    }
+                }
+            }
+        }
 
         stage('Verify Deployment') {
             steps {
