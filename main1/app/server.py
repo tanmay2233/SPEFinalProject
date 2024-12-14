@@ -3,6 +3,7 @@ from pydantic import BaseModel
 import joblib
 import pandas as pd
 import uvicorn
+from typing import List
 from fastapi.responses import RedirectResponse
 from bandit_experience import MultiArmedBanditExperience
 from fastapi.responses import FileResponse
@@ -33,7 +34,7 @@ def serve_frontend():
 
 # Define input schema for API requests
 class DoctorRequest(BaseModel):
-    specialists: list[str]
+    specialists: List[str] 
 
 class CompositeScoreRequest(BaseModel):
     ratings_weight: float

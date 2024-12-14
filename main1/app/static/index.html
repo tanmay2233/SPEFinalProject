@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,22 +10,28 @@
             font-family: Arial, sans-serif;
             margin: 20px;
         }
+
         .container {
             max-width: 500px;
             margin: 0 auto;
         }
+
         h1 {
             text-align: center;
         }
-        textarea, button {
+
+        textarea,
+        button {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
             font-size: 16px;
         }
+
         .results {
             margin-top: 20px;
         }
+
         .doctor {
             border: 1px solid #ccc;
             padding: 10px;
@@ -32,6 +39,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>Doctor Recommendation System</h1>
@@ -55,7 +63,7 @@
             resultsDiv.innerHTML = "<p>Loading...</p>";
 
             try {
-                const response = await fetch("http://192.168.49.2:30102/recommend/", {
+                const response = await fetch("http://192.168.58.2:30102/recommend/", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -102,4 +110,5 @@
         }
     </script>
 </body>
+
 </html>
