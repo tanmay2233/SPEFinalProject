@@ -90,7 +90,7 @@ pipeline {
                         echo "Checking pod status... (Attempt ${i})"
                         kubectl get pods -o wide
                         '''
-                        sleep 60 // Wait for 2 minutes
+                        sleep 120 // Wait for 2 minutes
                     }
                 }
             }
