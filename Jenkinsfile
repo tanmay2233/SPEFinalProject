@@ -23,7 +23,6 @@ pipeline {
             steps {
                 sh '''
                 kubectl get pods -o wide
-                kubectl get services
                 '''
             }
         }
