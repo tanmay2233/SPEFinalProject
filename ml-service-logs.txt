@@ -1,0 +1,24 @@
+INFO:     Started server process [1]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     10.244.0.1:50927 - "GET /frontend HTTP/1.1" 200 OK
+INFO:     10.244.0.1:50927 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     10.244.0.1:16833 - "GET / HTTP/1.1" 307 Temporary Redirect
+INFO:     10.244.0.1:20765 - "POST /recommend/ HTTP/1.1" 200 OK
+INFO:     10.244.0.1:26401 - "GET /frontend HTTP/1.1" 200 OK
+INFO:     10.244.0.1:26401 - "GET /frontend HTTP/1.1" 200 OK
+INFO:     10.244.0.1:26401 - "GET /frontend HTTP/1.1" 200 OK
+INFO:     10.244.0.1:26401 - "GET /frontend HTTP/1.1" 200 OK
+INFO:     10.244.0.1:62116 - "GET /frontend HTTP/1.1" 200 OK
+INFO:     10.244.0.1:39150 - "GET /frontend HTTP/1.1" 200 OK
+INFO:     10.244.0.1:58614 - "GET /frontend HTTP/1.1" 200 OK
+INFO:     10.244.0.1:58614 - "GET /frontend HTTP/1.1" 200 OK
+INFO:     10.244.0.1:58614 - "GET /frontend HTTP/1.1" 200 OK
+INFO:     10.244.0.1:33946 - "POST /recommend/ HTTP/1.1" 200 OK
+INFO:     10.244.0.1:15617 - "GET /frontend HTTP/1.1" 200 OK
+INFO:     10.244.0.1:13147 - "GET /frontend HTTP/1.1" 200 OK
+INFO:     10.244.0.1:57944 - "GET /frontend HTTP/1.1" 200 OK
+INFO:     10.244.0.1:57944 - "GET /frontend HTTP/1.1" 200 OK
+INFO:     10.244.0.1:57944 - "GET /frontend HTTP/1.1" 200 OK
+INFO:     10.244.0.1:34143 - "GET /frontend HTTP/1.1" 200 OK

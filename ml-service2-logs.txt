@@ -1,0 +1,18 @@
+ * Serving Flask app 'server.py'
+ * Debug mode: off
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.244.0.14:5000
+[33mPress CTRL+C to quit[0m
+10.244.0.1 - - [13/Dec/2024 16:34:06] "GET / HTTP/1.1" 200 -
+10.244.0.1 - - [13/Dec/2024 16:34:06] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+10.244.0.1 - - [13/Dec/2024 16:34:11] "GET / HTTP/1.1" 200 -
+10.244.0.1 - - [13/Dec/2024 17:15:49] "GET / HTTP/1.1" 200 -
+10.244.0.1 - - [13/Dec/2024 17:59:51] "GET / HTTP/1.1" 200 -
+10.244.0.1 - - [13/Dec/2024 18:01:57] "GET / HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:None for open-end generation.
+The attention mask is not set and cannot be inferred from input because pad token is same as eos token. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+10.244.0.1 - - [13/Dec/2024 18:05:57] "POST /predict HTTP/1.1" 200 -
+10.244.0.1 - - [13/Dec/2024 18:20:06] "GET / HTTP/1.1" 200 -

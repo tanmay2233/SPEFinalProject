@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+Flask
+Flask-Cors
+transformers
+torch==2.2.0
+pandas
+scikit-learn
+numpy

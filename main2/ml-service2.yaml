@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ml-deployment2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ml-service2
+  template:
+    metadata:
+      labels:
+        app: ml-service2
+    spec:
+      containers:
+      - name: ml-service2
+        image: tanmay2233/ml-service2
+        ports:
+        - containerPort: 5000  # Updated to match the Flask app's internal port
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ml-service2
+spec:
+  selector:
+    app: ml-service2
+  ports:
+  - protocol: TCP
+    port: 8001      # External port for the service
+    targetPort: 5000 # Updated to map the container's internal port
+    nodePort: 30103  # Fixed port on the node (for NodePort)
+  type: NodePort
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ml-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - host: ml-service2.local  # Ensure this domain is mapped in /etc/hosts
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: ml-service2
+            port:
+              number: 8001

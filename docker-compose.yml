@@ -1,0 +1,31 @@
+# version: '3.8'
+
+services:
+  calculator:
+    build:
+      context: ./Calculator
+      dockerfile: Dockerfile     
+    container_name: calculator_service
+    ports:
+      - "8081:8080"              
+    volumes:
+      - ./calculator_app:/app    
+    networks:
+      - app_network             
+
+  ml_application:
+    build:
+      context: ./main1          
+      dockerfile: Dockerfile    
+    container_name: ml_service
+    ports:
+      - "8000:8000"              
+    # volumes:
+      # - ./ml_app:/code           
+    networks:
+      - app_network              
+    depends_on:
+      - calculator               
+
+networks:
+  app_network:                   
