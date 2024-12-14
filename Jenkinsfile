@@ -15,6 +15,8 @@ pipeline {
         stage('Deploy with Ansible') {
             steps {
                 sh 'minikube version' // Print Minikube version
+                sh 'ls'
+                sh 'pwd'
                 sh 'ansible-playbook -i localhost, --connection=local deploy_services.yml'
             }
         }
