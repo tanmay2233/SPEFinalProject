@@ -1,9 +1,9 @@
 pipeline {
     agent any
 
-    // environment {
-    //     ANSIBLE_HOST_KEY_CHECKING = "False" // Disable host key checking
-    // }
+    environment {
+        ANSIBLE_HOST_KEY_CHECKING = "False"  // Disable host key checking for Ansible
+    }
 
     stages {
         stage('Clone Repository') {
@@ -12,26 +12,18 @@ pipeline {
             }
         }
 
-        stage('Set Up Minikube Context') {
+        stage('Deploy with Ansible') {
             steps {
-                sh '''
-                minikube start
-                kubectl config use-context minikube
-                '''
+                sh 'ansible-playbook -i localhost, --connection=local deploy_services.yml'
             }
         }
 
-        stage('Deploy Services with Ansible') {
+        stage('Verify Deployment') {
             steps {
                 sh '''
-                ansible-playbook -i localhost, --connection=local deploy_services.yml
+                kubectl get pods -o wide
+                kubectl get services
                 '''
-            }
-        }
-
-        stage('Verify Services') {
-            steps {
-                sh 'kubectl get pods -o wide'
             }
         }
     }
@@ -44,7 +36,7 @@ pipeline {
             echo 'Deployment successful!'
         }
         failure {
-            echo 'Deployment failed!'
+            echo 'Deployment failed. Check logs for details.'
         }
     }
 }
