@@ -19,10 +19,20 @@ pipeline {
             }
         }
 
+        stage('Print Minikube IP') {
+            steps {
+                sh '''
+                echo "Fetching Minikube IP..."
+                MINIKUBE_IP=$(minikube ip)
+                echo "Minikube IP: ${MINIKUBE_IP}"
+                '''
+            }
+        }
+
         stage('Monitor Pod Status') {
             steps {
                 script {
-                    def attempts = 10  // Number of attempts (20 minutes / 2 minutes per check)
+                    def attempts = 1  // Number of attempts (20 minutes / 2 minutes per check)
                     for (int i = 1; i <= attempts; i++) {
                         sh '''
                         echo "Checking pod status... (Attempt ${i})"
@@ -39,6 +49,7 @@ pipeline {
                 sh '''
                 echo "Final verification..."
                 kubectl get pods -o wide
+                kubectl get services
                 '''
             }
         }
