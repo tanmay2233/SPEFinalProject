@@ -1,9 +1,9 @@
 pipeline {
     agent any
 
-    environment {
-        ANSIBLE_HOST_KEY_CHECKING = "False" // Disable host key checking
-    }
+    // environment {
+    //     ANSIBLE_HOST_KEY_CHECKING = "False" // Disable host key checking
+    // }
 
     stages {
         stage('Clone Repository') {
