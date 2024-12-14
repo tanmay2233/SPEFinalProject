@@ -1,0 +1,22 @@
+---
+- name: Deploy services on Minikube
+  hosts: localhost
+  tasks:
+    - name: Ensure Minikube is running
+      command: minikube start
+
+    - name: Set up kubectl to use Minikube
+      shell: |
+        kubectl config use-context minikube
+
+    - name: Deploy service 1
+      shell: |
+        kubectl apply -f main1/ml-service.yaml
+
+    - name: Deploy service 2
+      shell: |
+        kubectl apply -f main2/ml-service2.yaml
+
+    - name: Verify services are running
+      shell: |
+        kubectl get pods -o wide
