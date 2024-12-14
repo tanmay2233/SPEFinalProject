@@ -15,8 +15,6 @@ pipeline {
         stage('Deploy with Ansible') {
             steps {
                 sh 'minikube version' // Print Minikube version
-                sh 'ls'
-                sh 'pwd'
                 sh 'ansible-playbook -i localhost, --connection=local deploy_services.yml'
             }
         }
@@ -31,20 +29,72 @@ pipeline {
             }
         }
 
-        stage('Monitor Pod Status') {
+        stage('Monitor and Fetch Logs for ml-service') {
             steps {
                 script {
-                    def attempts = 1  // Number of attempts (20 minutes / 2 minutes per check)
-                    for (int i = 1; i <= attempts; i++) {
-                        sh '''
-                        echo "Checking pod status... (Attempt ${i})"
-                        kubectl get pods -o wide
-                        '''
-                        sleep 120 // Wait for 2 minutes
+                    // Monitor until the ml-service pod is ready
+                    def mlServicePodName = ""
+                    def mlServicePodReady = false
+                    while (!mlServicePodReady) {
+                        echo "Checking ml-service pod..."
+                        mlServicePodName = sh(script: "kubectl get pods -l app=ml-service -o=jsonpath='{.items[0].metadata.name}'", returnStdout: true).trim()
+                        if (mlServicePodName) {
+                            echo "ml-service pod found: ${mlServicePodName}"
+                            mlServicePodReady = true
+                        } else {
+                            echo "Waiting for ml-service pod to be created..."
+                            sleep 20  // Wait for 20 seconds before retrying
+                        }
                     }
+
+                    // Once the ml-service pod is created, fetch logs using nohup
+                    sh """
+                    nohup kubectl logs -f ${mlServicePodName} > ml-service-logs.txt &
+                    """
                 }
             }
         }
+
+        // stage('Monitor and Fetch Logs for ml-service2') {
+        //     steps {
+        //         script {
+        //             // Monitor until the ml-service2 pod is ready
+        //             def mlService2PodName = ""
+        //             def mlService2PodReady = false
+        //             while (!mlService2PodReady) {
+        //                 echo "Checking ml-service2 pod..."
+        //                 mlService2PodName = sh(script: "kubectl get pods -l app=ml-service2 -o=jsonpath='{.items[0].metadata.name}'", returnStdout: true).trim()
+        //                 if (mlService2PodName) {
+        //                     echo "ml-service2 pod found: ${mlService2PodName}"
+        //                     mlService2PodReady = true
+        //                 } else {
+        //                     echo "Waiting for ml-service2 pod to be created..."
+        //                     sleep 20  // Wait for 20 seconds before retrying
+        //                 }
+        //             }
+
+        //             // Once the ml-service2 pod is created, fetch logs using nohup
+        //             sh """
+        //             nohup kubectl logs -f ${mlService2PodName} > ml-service2-logs.txt &
+        //             """
+        //         }
+        //     }
+        // }
+
+        // stage('Monitor Pod Status') {
+        //     steps {
+        //         script {
+        //             def attempts = 10  // Number of attempts (20 minutes / 2 minutes per check)
+        //             for (int i = 1; i <= attempts; i++) {
+        //                 sh '''
+        //                 echo "Checking pod status... (Attempt ${i})"
+        //                 kubectl get pods -o wide
+        //                 '''
+        //                 sleep 120 // Wait for 2 minutes
+        //             }
+        //         }
+        //     }
+        // }
 
         stage('Verify Deployment') {
             steps {

@@ -13,9 +13,9 @@
       shell: |
         kubectl apply -f main1/ml-service.yaml
 
-    - name: Deploy service 2
-      shell: |
-        kubectl apply -f main2/ml-service2.yaml
+    # - name: Deploy service 2
+    #   shell: |
+    #     kubectl apply -f main2/ml-service2.yaml
 
     - name: Verify services are running
       shell: |
