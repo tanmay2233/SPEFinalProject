@@ -39,9 +39,6 @@ pipeline {
                 sh '''
                 echo "Final verification..."
                 kubectl get pods -o wide
-                kubectl get services
-                echo "ml-service should be available at http://192.168.49.2:<PORT>"
-                echo "ml-service2 should be available at http://192.168.49.2:<PORT>"
                 '''
             }
         }
