@@ -11,8 +11,8 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
 # Container API URLs
-specialty_predictor_url = "http://192.168.49.2:30103//predict"
-doctor_recommendation_url = "http://192.168.49.2:30102//recommend/"
+specialty_predictor_url = "http://192.168.49.2:30103/predict"
+doctor_recommendation_url = "http://192.168.49.2:30102/recommend/"
 
 
 @app.get("/", response_class=HTMLResponse)
