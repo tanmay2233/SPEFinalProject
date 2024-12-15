@@ -86,7 +86,7 @@ pipeline {
                 script {
                     sh '''
             # Install dependencies from requirements.txt
-                    pip install --upgrade pip
+                    // pip install --upgrade pip
                     pip install -r requirements.txt
 
             # Run the FastAPI application
