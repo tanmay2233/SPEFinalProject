@@ -81,15 +81,6 @@ pipeline {
             }
         }
 
-        stage('Run uvicorn') {
-            steps {
-                script {
-                    sh '''
-                    uvicorn app:app --reload --host 192.168.49.1 --port 5002
-            '''
-                }
-            }
-        }
 
 
         stage('Monitor Pod Status') {
@@ -118,6 +109,15 @@ pipeline {
         }
     }
 
+        // stage('Run uvicorn') {
+        //     steps {
+        //         script {
+        //             sh '''
+        //             uvicorn app:app --reload --host 192.168.49.1 --port 5002
+        //     '''
+        //         }
+        //     }
+        // }
     post {
         always {
             echo 'Pipeline completed!'
