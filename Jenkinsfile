@@ -85,11 +85,6 @@ pipeline {
             steps {
                 script {
                     sh '''
-            # Install dependencies from requirements.txt
-                    // pip install --upgrade pip
-                    pip install -r requirements.txt
-
-            # Run the FastAPI application
                     uvicorn app:app --reload --host 192.168.49.1 --port 5002
             '''
                 }
