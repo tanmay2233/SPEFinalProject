@@ -83,7 +83,7 @@ pipeline {
                     
                     sh """
                     kubectl run ${fastApiPodName} --image=python:3.9 --restart=Never -- \
-                        sh -c "pip install fastapi uvicorn requests jinja2 && uvicorn app:app --host 0.0.0.0 --port ${fastApiPort}"
+                        sh -c "pip install fastapi uvicorn requests jinja2 && uvicorn app:app --reload --host 0.0.0.0 --port ${fastApiPort}"
                     
                     echo "Exposing FastAPI service as a NodePort..."
                     kubectl expose pod ${fastApiPodName} --type=NodePort --name=fastapi-service --port=${fastApiPort}
