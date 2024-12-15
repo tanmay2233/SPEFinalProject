@@ -21,16 +21,18 @@ pipeline {
 
         stage('Print Minikube IP') {
             steps {
-                script {
-                    def minikubeIp = sh(script: "minikube ip", returnStdout: true).trim()
-                    echo "Minikube IP: ${minikubeIp}"
-                }
+                sh '''
+                echo "Fetching Minikube IP..."
+                MINIKUBE_IP=$(minikube ip)
+                echo "Minikube IP: ${MINIKUBE_IP}"
+                '''
             }
         }
 
         stage('Monitor and Fetch Logs for ml-service') {
             steps {
                 script {
+                    // Monitor until the ml-service pod is ready
                     def mlServicePodName = ""
                     def mlServicePodReady = false
                     while (!mlServicePodReady) {
@@ -41,9 +43,11 @@ pipeline {
                             mlServicePodReady = true
                         } else {
                             echo "Waiting for ml-service pod to be created..."
-                            sleep(20)
+                            sleep 20  // Wait for 20 seconds before retrying
                         }
                     }
+
+                    // Once the ml-service pod is created, fetch logs using nohup
                     sh """
                     nohup kubectl logs -f ${mlServicePodName} > /var/lib/jenkins/workspace/SPE_Final/ml-service-logs.txt &
                     """
@@ -54,6 +58,7 @@ pipeline {
         stage('Monitor and Fetch Logs for ml-service2') {
             steps {
                 script {
+                    // Monitor until the ml-service2 pod is ready
                     def mlService2PodName = ""
                     def mlService2PodReady = false
                     while (!mlService2PodReady) {
@@ -64,9 +69,11 @@ pipeline {
                             mlService2PodReady = true
                         } else {
                             echo "Waiting for ml-service2 pod to be created..."
-                            sleep(20)
+                            sleep 20  // Wait for 20 seconds before retrying
                         }
                     }
+
+                    // Once the ml-service2 pod is created, fetch logs using nohup
                     sh """
                     nohup kubectl logs -f ${mlService2PodName} > /var/lib/jenkins/workspace/SPE_Final/ml-service2-logs.txt &
                     """
@@ -74,49 +81,12 @@ pipeline {
             }
         }
 
-        stage('Start FastAPI Service') {
-            steps {
-                script {
-                    def fastApiPodName = "fastapi-service"
-                    def fastApiPort = 5001
-                    echo "Starting FastAPI app as a Kubernetes pod..."
-                    
-                    sh """
-                    kubectl run ${fastApiPodName} --image=python:3.9 --restart=Never -- \
-                        sh -c "pip install fastapi uvicorn requests jinja2 && uvicorn app:app --reload --host 0.0.0.0 --port ${fastApiPort}"
-                    
-                    echo "Exposing FastAPI service as a NodePort..."
-                    kubectl expose pod ${fastApiPodName} --type=NodePort --name=fastapi-service --port=${fastApiPort}
-                    """
-                }
-            }
-        }
-
-        stage('Monitor FastAPI Pod') {
-            steps {
-                script {
-                    def fastApiPodReady = false
-                    while (!fastApiPodReady) {
-                        echo "Checking FastAPI pod..."
-                        def podStatus = sh(script: "kubectl get pod fastapi-service -o=jsonpath='{.status.phase}'", returnStdout: true).trim()
-                        if (podStatus == "Running") {
-                            echo "FastAPI pod is in Running state."
-                            fastApiPodReady = true
-                        } else {
-                            echo "FastAPI pod is in ${podStatus} state, waiting..."
-                            sleep(10)
-                        }
-                    }
-                }
-            }
-        }
-
-        stage('Fetch FastAPI Service URL') {
-            steps {
-                script {
-                    def minikubeIp = sh(script: "minikube ip", returnStdout: true).trim()
-                    def fastApiNodePort = sh(script: "kubectl get svc fastapi-service -o=jsonpath='{.spec.ports[0].nodePort}'", returnStdout: true).trim()
-                    echo "FastAPI service is accessible at: http://${minikubeIp}:${fastApiNodePort}"
+        stage('Run uvicorn'){
+            steps{
+                script{
+                    sh '''
+                    uvicorn app:app --reload --host 0.0.0.0 -port 5001
+                    '''
                 }
             }
         }
@@ -124,13 +94,13 @@ pipeline {
         stage('Monitor Pod Status') {
             steps {
                 script {
-                    def attempts = 8
+                    def attempts = 8  // Number of attempts (20 minutes / 2 minutes per check)
                     for (int i = 1; i <= attempts; i++) {
                         sh '''
                         echo "Checking pod status... (Attempt ${i})"
                         kubectl get pods -o wide
                         '''
-                        sleep(60)
+                        sleep 60 // Wait for 1 minute
                     }
                 }
             }

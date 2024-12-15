@@ -1,3 +1,10 @@
 pandas==1.5.3
 numpy==1.23.5
 uvicorn==0.22.0
+jinja2
+uvicorn
+requests
+pydantic
+starlette
+fastapi
+python-multipart
