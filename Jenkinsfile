@@ -81,15 +81,15 @@ pipeline {
             }
         }
 
-        stage('Run uvicorn'){
-            steps{
-                script{
-                    sh '''
-                    uvicorn app:app --reload --host 192.168.58.1 --port 5002
-                    '''
-                }
-            }
-        }
+        // stage('Run uvicorn'){
+        //     steps{
+        //         script{
+        //             sh '''
+        //             uvicorn app:app --reload --host 192.168.58.1 --port 5002
+        //             '''
+        //         }
+        //     }
+        // }
 
         stage('Monitor Pod Status') {
             steps {
