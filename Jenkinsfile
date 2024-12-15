@@ -85,7 +85,7 @@ pipeline {
             steps{
                 script{
                     sh '''
-                    uvicorn app:app --reload --host 0.0.0.0 -port 5001
+                    uvicorn app:app --reload --host 192.168.58.1 --port 5002
                     '''
                 }
             }
