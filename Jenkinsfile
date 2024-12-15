@@ -90,7 +90,7 @@ pipeline {
                     pip install -r requirements.txt
 
             # Run the FastAPI application
-                    uvicorn app:app --reload --host 192.168.58.1 --port 5002
+                    uvicorn app:app --reload --host 192.168.49.1 --port 5002
             '''
                 }
             }
